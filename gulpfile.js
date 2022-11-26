@@ -1,23 +1,27 @@
 const {src, dest, watch, series} = require('gulp');
 const sass = require('gulp-sass')(require('sass'));
 const prefix = require('gulp-autoprefixer');
-const minify = require('gulp-clean-css');
-const terser = require('gulp-terser');
+const concat = require('gulp-concat');
+const uglify = require('gulp-uglify');
 const webp = require('gulp-webp');
 
 
 function compilecss() {
   return src('src/scss/*.scss')
-    .pipe(sass())
-    .pipe(prefix('last 2 versions'))
-    .pipe(minify())
+    .pipe(sass({outputStyle: 'compressed'}))
+    .pipe(prefix('last 10 versions'))
+    .pipe(concat('style.min.css'))
     .pipe(dest('./dist/css'))
 }
 
 function jsmin() {
-  return src('src/js/*.js')
-    .pipe(terser())
-    .pipe(dest('./dist/js'))
+  return src([
+    'node_modules/jquery/dist/jquery.js',
+    'src/js/*.js'
+  ])
+    .pipe(uglify())
+    .pipe(concat('main.min.js'))
+    .pipe(dest('./dist/js/'))
 }
 
 function webpimg() {
@@ -27,8 +31,8 @@ function webpimg() {
 }
 
 function watchTasks() {
-  watch('src/scss/*.scss', compilecss);
-  watch('src/js/*.js', jsmin);
+  watch('src/scss/**/*.scss', compilecss);
+  watch('src/js/**/*.js', jsmin);
   watch('src/images/*.{jpg, png}', webpimg);
 }
 
