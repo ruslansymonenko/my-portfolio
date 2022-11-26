@@ -3,8 +3,6 @@ const sass = require('gulp-sass')(require('sass'));
 const prefix = require('gulp-autoprefixer');
 const concat = require('gulp-concat');
 const uglify = require('gulp-uglify');
-const webp = require('gulp-webp');
-
 
 function compilecss() {
   return src('src/scss/style.scss')
@@ -24,21 +22,14 @@ function jsmin() {
     .pipe(dest('./dist/js/'))
 }
 
-function webpimg() {
-  return src('src/images/*.{jpg, png}')
-    .pipe(webp())
-    .pipe(dest('./dist/images'))
-}
-
 function watchTasks() {
   watch('src/scss/**/*.scss', compilecss);
   watch('src/js/**/*.js', jsmin);
-  watch('src/images/*.{jpg, png}', webpimg);
+  watch('src/images/*.{jpg, png}', imagemin);
 }
 
 exports.default = series(
   compilecss,
   jsmin,
-  webpimg,
   watchTasks
 );
