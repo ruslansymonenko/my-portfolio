@@ -7,7 +7,7 @@ const webp = require('gulp-webp');
 
 
 function compilecss() {
-  return src('src/scss/*.scss')
+  return src('src/scss/style.scss')
     .pipe(sass({outputStyle: 'compressed'}))
     .pipe(prefix('last 10 versions'))
     .pipe(concat('style.min.css'))
